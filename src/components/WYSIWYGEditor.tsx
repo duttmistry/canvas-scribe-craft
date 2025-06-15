@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -82,15 +81,11 @@ export const WYSIWYGEditor: React.FC<WYSIWYGEditorProps> = ({
     );
   };
 
-  // Configure modules for proper image handling
+  // Simplified modules configuration without imageResize
   const modules = {
     toolbar: false, // We use custom toolbar
     clipboard: {
       matchVisual: false,
-    },
-    imageResize: {
-      parchment: undefined,
-      modules: ['Resize', 'DisplaySize']
     }
   };
 

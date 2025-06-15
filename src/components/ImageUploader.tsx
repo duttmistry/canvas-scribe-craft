@@ -73,15 +73,8 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageInsert, onC
         crop.height
       );
 
-      return new Promise((resolve) => {
-        canvas.toBlob((blob) => {
-          if (!blob) {
-            throw new Error('Canvas is empty');
-          }
-          const url = URL.createObjectURL(blob);
-          resolve(url);
-        }, 'image/jpeg');
-      });
+      // Convert to base64 instead of blob URL
+      return Promise.resolve(canvas.toDataURL('image/jpeg', 0.9));
     },
     []
   );
@@ -90,6 +83,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageInsert, onC
     if (completedCrop && imgRef.current) {
       try {
         const croppedImageUrl = await getCroppedImg(imgRef.current, completedCrop);
+        console.log('Cropped image data URL:', croppedImageUrl.substring(0, 50) + '...');
         onImageInsert(croppedImageUrl);
       } catch (error) {
         console.error('Error cropping image:', error);
@@ -98,6 +92,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageInsert, onC
   }, [completedCrop, getCroppedImg, onImageInsert]);
 
   const handleUseOriginal = () => {
+    console.log('Using original image:', imageSrc.substring(0, 50) + '...');
     onImageInsert(imageSrc);
   };
 

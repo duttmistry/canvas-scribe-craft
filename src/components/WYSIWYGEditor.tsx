@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -31,22 +32,28 @@ export const WYSIWYGEditor: React.FC<WYSIWYGEditorProps> = ({
   }, [value]);
 
   const handleContentChange = (content: string) => {
+    console.log('Content changed:', content.substring(0, 100) + '...');
     setEditorContent(content);
     onChange?.(content);
   };
 
   const handleImageInsert = (imageUrl: string) => {
+    console.log('Inserting image:', imageUrl.substring(0, 50) + '...');
+    
     if (quillRef.current) {
       const quill = quillRef.current.getEditor();
       const range = quill.getSelection();
       const index = range ? range.index : quill.getLength();
       
-      // Insert image with proper formatting
+      // Insert image at cursor position
       quill.insertEmbed(index, 'image', imageUrl);
+      
+      // Move cursor after the image
       quill.setSelection(index + 1);
       
-      // Update the content state to trigger re-render
+      // Force update the content
       const updatedContent = quill.root.innerHTML;
+      console.log('Updated content after image insert:', updatedContent.substring(0, 100) + '...');
       setEditorContent(updatedContent);
       onChange?.(updatedContent);
     }
@@ -81,7 +88,7 @@ export const WYSIWYGEditor: React.FC<WYSIWYGEditorProps> = ({
     );
   };
 
-  // Simplified modules configuration without imageResize
+  // Simplified modules configuration
   const modules = {
     toolbar: false, // We use custom toolbar
     clipboard: {

@@ -41,8 +41,15 @@ export const WYSIWYGEditor: React.FC<WYSIWYGEditorProps> = ({
       const quill = quillRef.current.getEditor();
       const range = quill.getSelection();
       const index = range ? range.index : quill.getLength();
+      
+      // Insert image with proper formatting
       quill.insertEmbed(index, 'image', imageUrl);
       quill.setSelection(index + 1);
+      
+      // Update the content state to trigger re-render
+      const updatedContent = quill.root.innerHTML;
+      setEditorContent(updatedContent);
+      onChange?.(updatedContent);
     }
     setShowImageUploader(false);
   };
@@ -75,12 +82,16 @@ export const WYSIWYGEditor: React.FC<WYSIWYGEditorProps> = ({
     );
   };
 
-  // Simplified modules configuration to fix text input issues
+  // Configure modules for proper image handling
   const modules = {
-    toolbar: false, // We'll use our custom toolbar
+    toolbar: false, // We use custom toolbar
     clipboard: {
       matchVisual: false,
     },
+    imageResize: {
+      parchment: undefined,
+      modules: ['Resize', 'DisplaySize']
+    }
   };
 
   const formats = [
@@ -164,17 +175,21 @@ export const WYSIWYGEditor: React.FC<WYSIWYGEditorProps> = ({
           <div className="space-y-2">
             <div className="border rounded-lg">
               <CustomToolbar quillRef={quillRef} />
-              <ReactQuill
-                ref={quillRef}
-                theme="snow"
-                value={editorContent}
-                onChange={handleContentChange}
-                modules={modules}
-                formats={formats}
-                placeholder={placeholder}
-                className="border-0"
-                style={{ minHeight: '300px' }}
-              />
+              <div className="min-h-[300px]">
+                <ReactQuill
+                  ref={quillRef}
+                  theme="snow"
+                  value={editorContent}
+                  onChange={handleContentChange}
+                  modules={modules}
+                  formats={formats}
+                  placeholder={placeholder}
+                  style={{
+                    height: '300px',
+                    marginBottom: '42px'
+                  }}
+                />
+              </div>
             </div>
           </div>
         )}

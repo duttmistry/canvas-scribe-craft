@@ -105,7 +105,7 @@ const Index = () => {
             <div className="p-4 bg-purple-50 rounded-lg">
               <h3 className="font-semibold text-purple-900 mb-2">Dynamic Variables</h3>
               <p className="text-sm text-purple-700">
-                Insert placeholder variables like {{`userName`}} that can be replaced dynamically.
+                Insert placeholder variables like {"{{"} userName {"}"} that can be replaced dynamically.
               </p>
             </div>
             <div className="p-4 bg-orange-50 rounded-lg">

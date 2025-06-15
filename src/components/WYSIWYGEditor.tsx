@@ -75,10 +75,9 @@ export const WYSIWYGEditor: React.FC<WYSIWYGEditorProps> = ({
     );
   };
 
+  // Simplified modules configuration to fix text input issues
   const modules = {
-    toolbar: {
-      container: '#toolbar',
-    },
+    toolbar: false, // We'll use our custom toolbar
     clipboard: {
       matchVisual: false,
     },
@@ -88,7 +87,7 @@ export const WYSIWYGEditor: React.FC<WYSIWYGEditorProps> = ({
     'header', 'font', 'size',
     'bold', 'italic', 'underline', 'strike', 'blockquote',
     'list', 'bullet', 'indent',
-    'link', 'image', 'video',
+    'link', 'image',
     'align', 'color', 'background',
     'script', 'code-block'
   ];
@@ -129,9 +128,6 @@ export const WYSIWYGEditor: React.FC<WYSIWYGEditorProps> = ({
         </div>
       </div>
 
-      {/* Toolbar */}
-      {!isHtmlMode && <CustomToolbar />}
-
       {/* Variable Inserter */}
       {showVariables && (
         <VariableInserter
@@ -156,7 +152,7 @@ export const WYSIWYGEditor: React.FC<WYSIWYGEditorProps> = ({
             <textarea
               value={editorContent}
               onChange={(e) => handleContentChange(e.target.value)}
-              className="w-full h-64 p-3 border rounded-lg font-mono text-sm"
+              className="w-full h-64 p-3 border rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter HTML content..."
             />
             <div className="border-t pt-4">
@@ -165,16 +161,22 @@ export const WYSIWYGEditor: React.FC<WYSIWYGEditorProps> = ({
             </div>
           </div>
         ) : (
-          <ReactQuill
-            ref={quillRef}
-            theme="snow"
-            value={editorContent}
-            onChange={handleContentChange}
-            modules={modules}
-            formats={formats}
-            placeholder={placeholder}
-            className="min-h-[300px]"
-          />
+          <div className="space-y-2">
+            <div className="border rounded-lg">
+              <CustomToolbar quillRef={quillRef} />
+              <ReactQuill
+                ref={quillRef}
+                theme="snow"
+                value={editorContent}
+                onChange={handleContentChange}
+                modules={modules}
+                formats={formats}
+                placeholder={placeholder}
+                className="border-0"
+                style={{ minHeight: '300px' }}
+              />
+            </div>
+          </div>
         )}
       </div>
     </div>
